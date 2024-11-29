@@ -24,11 +24,13 @@
                                 <td class="px-4 py-3">{{ $user->name }}</td>
                                 <td class="px-4 py-3 duration-300">
                                     @if ($user->roles->isNotEmpty())
-                                        {{ $user->roles->pluck('name')->join(', ') }} 
+                                        {{ $user->roles->pluck('name')->join(', ') }}
 
-<div class=" flex justify-center">
-                                        <button id="updateBtn{{$user->id}}" class="bg-green-500 text-white hover:bg-green-400 p-2 rounded-md" onclick=" event.preventDefault();document.getElementById('updateForm{{ $user->id }}').classList.remove('hidden');document.getElementById('updateBtn{{ $user->id }}').classList.add('hidden')">Update<button>
-</div>
+                                        <div class=" flex justify-center my-3">
+                                            <button id="updateBtn{{ $user->id }}"
+                                                class="bg-green-500 text-white hover:bg-green-400 p-2 rounded-md"
+                                                onclick=" event.preventDefault();document.getElementById('updateForm{{ $user->id }}').classList.remove('hidden');document.getElementById('updateBtn{{ $user->id }}').classList.add('hidden')">Update<button>
+                                        </div>
 
                                         <form action="{{ route('user.updateRole', ['user' => $user->id]) }}"
                                             method="POST">

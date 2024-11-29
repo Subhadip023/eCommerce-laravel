@@ -23,7 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
     ];
-    public function guardName() { return ['web', 'admin']; }
+    protected function getDefaultGuardName(): string { return 'web'; }
 
 
     /**
