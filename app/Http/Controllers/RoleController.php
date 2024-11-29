@@ -69,7 +69,6 @@ class RoleController extends Controller
         
         // Retrieve permissions by IDs and sync by names
         $permissions = Permission::whereIn('id', $validated['permissions'] ?? [])->get();
-        // dd($role);
         $role->syncPermissions($permissions);
         
 
@@ -79,8 +78,8 @@ class RoleController extends Controller
     // Delete a role
     public function destroy(Role $role)
     {
-        if ($role->name == 'admin') {
-            return redirect()->back()->with('success', "Can't delte admin");
+        if ($role->name == 'super-admin') {
+            return redirect()->back()->with('error', "Can't delte super-admin");
         }
         $role->delete();
 

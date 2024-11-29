@@ -36,7 +36,7 @@
             
             
             </a> 
-                <form action="{{ route('role.destroy', $permission->id) }}" method="POST" style="display:inline;">
+                <form action="{{ route('permissions.destroy', ['permission'=>$permission->id]) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" onclick="return confirm('Are you sure?')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill scale-150 text-red-600" viewBox="0 0 16 16">

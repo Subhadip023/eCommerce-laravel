@@ -66,19 +66,16 @@ class UserController extends Controller
 
 
         // Prevent assigning the admin role if the user is not already an admin . Admin can change there roles 
-        if (!auth()->user()->hasRole('admin') && in_array('admin', $validatedData['roles'])) {
+        if (!auth()->user()->hasRole('admin') && in_array('admin', $validatedData['roles'])&&!auth()->user()->hasRole('super-admin') ) {
             return redirect()->back()->with('error', 'You cannot Add the admin role only admin can Add the role of admin .');
         }
 
-        if (auth()->user()->hasRole('admin') && $user->hasRole('admin') && auth()->user()->id !== $user->id) {
+        if (auth()->user()->hasRole('admin') && $user->hasRole('admin') && auth()->user()->id !== $user->id&&!auth()->user()->hasRole('super-admin')) {
             return redirect()->back()->with('error', "Only {$user->name} can edit own roles. Only super admin can do this  ");
 
         }
 
         $requestRoles = $validatedData;
-
-        // $removeRoles = array_diff($existingRoles, $requestRoles);
-        // $user->removeRole($removeRoles);
 
         $user->syncRoles($requestRoles,[]);
 

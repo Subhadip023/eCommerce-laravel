@@ -25,7 +25,7 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'role:admin|super-admin'])->group(function () {
     Route::resource('role', RoleController::class);
     Route::resource('permissions', PermissionController::class);
 });

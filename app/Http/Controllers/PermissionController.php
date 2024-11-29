@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class PermissionController extends Controller
 {
@@ -28,10 +29,18 @@ class PermissionController extends Controller
         $guardName = $request->user()->hasRole('admin') ? 'admin' : 'web';
 
         // Create the permission
-        Permission::create([
+        $permission=Permission::create([
             'name' => $validated['name'],
             'guard_name' => "web",
         ]);
+
+     // Retrieve the super-admin role
+$role = Role::where('name', 'super-admin')->first();
+
+// Check if the role exists before assigning the permission
+if ($role) {
+    $role->givePermissionTo($permission);
+}
  
         // Redirect with a success message
         return redirect()->route('permissions.index')->with('success', 'Permission created successfully.');
@@ -39,6 +48,13 @@ class PermissionController extends Controller
     
     public function edit (Request $request ,Permission $permission){
         return view('permissions.edit',['permission'=>$permission]);
+    }
+
+    public function destroy(Permission $permission){
+
+        // dd( $permission);
+        $permission->delete();
+        return redirect()->back()->with('success','The Permission deleted succesflly!');
     }
 
    

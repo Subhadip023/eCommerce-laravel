@@ -31,7 +31,6 @@
                                                 class="bg-green-500 text-white hover:bg-green-400 p-2 rounded-md"
                                                 onclick=" event.preventDefault();document.getElementById('updateForm{{ $user->id }}').classList.remove('hidden');document.getElementById('updateBtn{{ $user->id }}').classList.add('hidden')">Update<button>
                                         </div>
-
                                         <form action="{{ route('user.updateRole', ['user' => $user->id]) }}"
                                             method="POST">
                                             <div id="updateForm{{ $user->id }}"
@@ -40,14 +39,31 @@
                                                 @csrf
                                                 @method('PUT')
 
-                                                @foreach ($roles as $role)
+
+                                                @php
+                                                    $rolesArray = $roles->pluck('name')->toArray();
+
+                                                    if (auth()->user()->hasRole('super-admin')) {
+                                                        $userRoles = $rolesArray;
+                                                    } else {
+                                                        $userRoles = array_diff(
+                                                            $rolesArray,
+                                                            ['super-admin'],
+                                                        );
+                                                    }
+
+                                                @endphp
+
+
+                                                @foreach ($userRoles as $role)
                                                     <div
                                                         class=" w-fit p-2 mb-2 mr-1 flex items-center justify-start gap-x-1">
+
                                                         <input type="checkbox" name="roles[]"
-                                                            id="role-{{ $role->id }}" value="{{ $role->name }}"
-                                                            {{ $user->hasRole($role->name) ? 'checked' : '' }}>
+                                                            id="role-{{ $role }}" value="{{ $role }}"
+                                                            {{ $user->hasRole($role) ? 'checked' : '' }}>
                                                         <label
-                                                            for="role-{{ $role->id }}">{{ $role->name }}</label>
+                                                            for="role-{{ $role }}">{{ $role }}</label>
                                                     </div>
                                                 @endforeach
                                                 <div class="w-full mb-2 flex items-center justify-center gap-x-5">
