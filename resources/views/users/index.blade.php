@@ -6,7 +6,7 @@
     </x-slot>
     <section class="text-gray-600 body-font">
         <div class="container px-5 py-24 mx-auto">
-            <div class="lg:w-2/3 w-full mx-auto overflow-auto">
+            <div class="lg:w-3/3 w-full mx-auto overflow-auto">
                 <table class="table-auto w-full text-left whitespace-no-wrap">
                     <thead>
                         <tr>
@@ -19,12 +19,46 @@
                     </thead>
                     <tbody>
                         @foreach ($users as $index => $user)
-                            <tr>
-                                <td class="px-4 py-3">{{ $index + 1 }}</td>
+                            <tr class="border-b-2 py-2">
+                                <td class="px-4 py-3 ">{{ $index + 1 }}</td>
                                 <td class="px-4 py-3">{{ $user->name }}</td>
-                                <td class="px-4 py-3">
+                                <td class="px-4 py-3 duration-300">
                                     @if ($user->roles->isNotEmpty())
-                                        {{ $user->roles->pluck('name')->join(', ') }}
+                                        {{ $user->roles->pluck('name')->join(', ') }} 
+
+<div class=" flex justify-center">
+                                        <button id="updateBtn{{$user->id}}" class="bg-green-500 text-white hover:bg-green-400 p-2 rounded-md" onclick=" event.preventDefault();document.getElementById('updateForm{{ $user->id }}').classList.remove('hidden');document.getElementById('updateBtn{{ $user->id }}').classList.add('hidden')">Update<button>
+</div>
+
+                                        <form action="{{ route('user.updateRole', ['user' => $user->id]) }}"
+                                            method="POST">
+                                            <div id="updateForm{{ $user->id }}"
+                                                class="relative mb-4 w-[500px] flex flex-row flex-wrap border box-border shadow-md justify-center rounded-md hidden">
+
+                                                @csrf
+                                                @method('PUT')
+
+                                                @foreach ($roles as $role)
+                                                    <div
+                                                        class=" w-fit p-2 mb-2 mr-1 flex items-center justify-start gap-x-1">
+                                                        <input type="checkbox" name="roles[]"
+                                                            id="role-{{ $role->id }}" value="{{ $role->name }}"
+                                                            {{ $user->hasRole($role->name) ? 'checked' : '' }}>
+                                                        <label
+                                                            for="role-{{ $role->id }}">{{ $role->name }}</label>
+                                                    </div>
+                                                @endforeach
+                                                <div class="w-full mb-2 flex items-center justify-center gap-x-5">
+
+                                                    <button class="border-2 p-2 rounded-lg hover:bg-gray-300"
+                                                        onclick=" event.preventDefault();document.getElementById('updateForm{{ $user->id }}').classList.add('hidden');document.getElementById('updateBtn{{ $user->id }}').classList.remove('hidden')">Cancel</button>
+
+                                                    <button type="submit"
+                                                        class="bg-green-400  hover:bg-green-600 hover:text-white p-2 rounded">Update</button>
+                                                </div>
+
+                                            </div>
+                                        </form>
                                     @else
                                         <button onclick="showModal({{ $user->id }})"
                                             class="text-indigo-500 hover:underline">Add role</button>
@@ -64,7 +98,8 @@
                     <label for="role" class="block text-gray-700">Role Name</label>
                     @foreach ($roles as $role)
                         <div>
-                            <input type="checkbox" name="roles[]" id="role-{{ $role->id }}" value="{{ $role->name }}">
+                            <input type="checkbox" name="roles[]" id="role-{{ $role->id }}"
+                                value="{{ $role->name }}">
                             <label for="role-{{ $role->id }}">{{ $role->name }}</label>
                         </div>
                     @endforeach
@@ -79,11 +114,12 @@
         </div>
     </div>
 
+
     <script>
         function showModal(userId) {
             const modal = document.getElementById('modal');
             const form = document.getElementById('roleForm');
-            form.action = `users/${userId}/role/create`; 
+            form.action = `users/${userId}/role/create`;
             modal.classList.remove('hidden');
         }
 
@@ -92,4 +128,7 @@
             modal.classList.add('hidden');
         }
     </script>
+
+
+
 </x-app-layout>

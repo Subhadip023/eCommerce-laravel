@@ -26,7 +26,19 @@
                     </div>
                 </header>
             @endisset
-
+            @if (session('success'))
+            <div id="successMsg" class="bg-green-400 text-gray-700 w-[95%] p-2 px-5 rounded-md font-serif text-2xl mx-auto mt-1">
+                {{ session('success') }}
+          
+            </div>
+            @endif
+            
+            @if (session('error'))
+            <div id="successMsg" class="bg-red-400 text-gray-700 w-[95%] p-2 px-5 rounded-md font-serif text-2xl mx-auto mt-1  ">
+                {{ session('error') }}
+          
+            </div>
+            @endif
             <!-- Page Content -->
             <main>
                 {{ $slot }}
